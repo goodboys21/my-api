@@ -129,10 +129,12 @@ app.get("/bugilin", async (req, res) => {
   }
 
   try {
-    // Nembak ke goodplay dengan apikey default 'bagus'
-    const { data } = await axios.get("https://goodplay.xyz/bugilin.php", {
-      params: { apikey: "bagus", url },
-    });
+    // Encode dulu biar ga error di querystring
+    const encodedUrl = encodeURIComponent(url);
+
+    // Panggil goodplay langsung pakai URL full
+    const apiUrl = `https://goodplay.xyz/bugilin.php?apikey=bagus&url=${encodedUrl}`;
+    const { data } = await axios.get(apiUrl);
 
     if (!data || !data.result) {
       return res.status(500).json({
@@ -155,7 +157,7 @@ app.get("/bugilin", async (req, res) => {
     });
   }
 });
-          
+
 app.listen(PORT, () => {
   console.log(`Server berjalan pada http://localhost:${PORT}`);
 });
