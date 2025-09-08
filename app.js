@@ -121,29 +121,43 @@ app.post('/mdfup', async (req, res) => {
 app.get("/bugilin", async (req, res) => {
     const { url } = req.query;
 
-    // Validasi parameter
     if (!url) {
-        return res.json({ success: false, message: "Isi parameter URL gambar." });
+        return res.json({ 
+            success: false, 
+            message: "Isi parameter URL gambar dengan query ?url=" 
+        });
     }
 
     try {
         const apiUrl = `https://goodplay.xyz/bugilin.php?apikey=bagus&url=${encodeURIComponent(url)}`;
+        console.log("Requesting:", apiUrl); // DEBUG
+
         const response = await axios.get(apiUrl);
+        console.log("Response Goodplay:", response.data); // DEBUG
+
         const result = response.data;
 
-        if (!result.success || !result.result) {
-            return res.json({ success: false, message: "Gagal mengambil data dari API Goodplay." });
+        if (!result || !result.success || !result.result) {
+            return res.json({ 
+                success: false, 
+                message: "Gagal mengambil data dari API Goodplay.",
+                raw: result // biar keliatan respon aslinya
+            });
         }
 
-        // Format ulang sesuai request lo
-        res.json({
+        return res.json({
             success: true,
             creator: "Bagus Bahril",
             result: result.result
         });
 
     } catch (error) {
-        res.status(500).json({ success: false, message: error.message });
+        console.error("Error /bugilin:", error.message);
+        return res.status(500).json({ 
+            success: false, 
+            message: "Terjadi kesalahan server", 
+            error: error.message 
+        });
     }
 });
 
