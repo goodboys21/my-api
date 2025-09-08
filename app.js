@@ -133,14 +133,14 @@ app.get("/bugilin", async (req, res) => {
         console.log("Requesting:", apiUrl); // DEBUG
 
         const response = await axios.get(apiUrl);
-        console.log("Response Goodplay:", response.data); // DEBUG
+        console.log("Respons:", response.data); // DEBUG
 
         const result = response.data;
 
         if (!result || !result.success || !result.result) {
             return res.json({ 
                 success: false, 
-                message: "Gagal mengambil data dari API Goodplay.",
+                message: "Gagal mengambil data",
                 raw: result // biar keliatan respon aslinya
             });
         }
